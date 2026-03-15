@@ -106,7 +106,54 @@ uvicorn bot:api --host 0.0.0.0 --port 3000
 
 ## 감사의 말
 
-> *AI가 재현할 코드를 남겨주신 개발자 분들께 경의를 표합니다.*
+> *AI가 학습할 MySQL 8.0+
+- Slack App (Bot Token + Signing Secret)
+- Anthropic API Key
+
+### 2. DB 초기화
+
+```bash
+mysql -u root -p < init_db.sql
+```
+
+### 3. 환경 변수
+
+```bash
+cp env.example .env
+# .env 파일을 열어 실제 값으로 채워주세요
+```
+
+### 4. 의존성 설치 및 실행
+
+```bash
+pip install -r requirements.txt
+uvicorn bot:api --host 0.0.0.0 --port 3000
+```
+
+### 5. Slack App 설정
+
+- **Event Subscriptions** → Request URL: `https://your-domain/slack/events`
+- **Subscribe to bot events**: `message.channels`, `message.groups`
+- **Slash Commands**: `/notice-config` → `https://your-domain/slack/events`
+- **Interactivity**: Request URL → `https://your-domain/slack/events`
+
+---
+
+## API 엔드포인트
+
+| 메서드 | 경로 | 설명 |
+|--------|------|------|
+| POST | `/slack/events` | Slack 이벤트 수신 |
+| GET | `/health` | 헬스체크 |
+| GET | `/config/{channel_id}` | 채널 설정 조회 |
+| POST | `/digest/now` | GREEN 다이제스트 즉시 전송 |
+| POST | `/report/now` | 주간 리포트 즉시 전송 |
+
+---
+
+## 감사의 말
+
+> *AI가 학습할 코드를 남겨주신 개발자 분들께 경의를 표합니다.*
 >
 > 이 프로젝트는 오픈소스 생태계 위에 서 있습니다.
 > Slack Bolt, FastAPI, APScheduler, PyMySQL, DBUtils,
